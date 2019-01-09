@@ -1,4 +1,4 @@
-function [ I, R] = enhancer( src, alpha, beta, pI, pR, vareps, r, r0, K, debug)
+function [ I, R] = jiep( src, alpha, beta, lambda, vareps, r, r0, K, debug)
 if (~exist('alpha','var'))	% alpha -- parameter for shape
     alpha = 0.001;
 end
@@ -51,8 +51,8 @@ for iter = 1:K
     Iy = diff(I,1,1); Iy = padarray(Iy, [1 0], 'post');
     avgIx=convBox( single(Ix), r);
     avgIy=convBox( single(Iy), r);
-    ux = max(abs(avgIx.^pI),eps).^(-1);  % ux in Eq.(11) avgIx.^pI > avgIx.*Ix > Ix.^2
-    uy = max(abs(avgIy.^pI),eps).^(-1);  % uy in Eq.(11) similarly
+    ux = max(abs(avgIx.*Ix),eps).^(-1);                     % ux in Eq.(11)
+    uy = max(abs(avgIy.*Iy),eps).^(-1);                     % uy in Eq.(11)
     ux(:,end) = 0;
     uy(end,:) = 0;
     
@@ -63,10 +63,8 @@ for iter = 1:K
     R=S./I;
     Rx = diff(R,1,2); Rx = padarray(Rx, [0 1], 'post');
     Ry = diff(R,1,1); Ry = padarray(Ry, [1 0], 'post');
-    avgRx=convBox( single(Rx), r);
-    avgRy=convBox( single(Ry), r);
-    vx = max(abs(avgRx.^pR),eps).^(-1);                            % vx in Eq.(11)
-    vy = max(abs(avgRy.^pR),eps).^(-1);                            % vy in Eq.(11)
+    vx = max(abs(Rx),eps).^(-1);                            % vx in Eq.(11)
+    vy = max(abs(Ry),eps).^(-1);                            % vy in Eq.(11)
     vx(:,end) = 0;
     vy(end,:) = 0;
     
