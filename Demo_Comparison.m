@@ -1,8 +1,9 @@
 clc;
 clear;
 % test images
-Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/LowLightImages/'; 
-fpath = fullfile(Original_image_dir, '*.bmp');
+% Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/LowLightImages/'; 
+Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/NASA/'; 
+fpath = fullfile(Original_image_dir, '*.jpg');
 im_dir  = dir(fpath);
 im_num = length(im_dir);
 
@@ -20,7 +21,8 @@ for m = 1:length(methods)
     method = methods{m};
     % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
-    write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_LowLight/';
+    % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_LowLight/';
+    write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
     write_img_dir = [write_mat_dir method '/'];
     if ~isdir(write_img_dir)
         mkdir(write_img_dir);
