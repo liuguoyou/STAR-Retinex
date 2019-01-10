@@ -10,7 +10,7 @@ im_num = length(im_dir);
 addpath('metrics');
 metrics = {'LOE', 'NIQE'};
 % methods
-methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'HE'};
+methods = {'Li_TIP2018', 'JieP_ICCV2017', 'WVM_CVPR2016', 'HE'};
 addpath('methods');
 
 for m = 1:length(methods)
@@ -26,7 +26,27 @@ for m = 1:length(methods)
     LOEs = zeros(im_num,1);
     for i = 1:im_num
         name = regexp(im_dir(i).name, '\.', 'split');
-        if strcmp(method, 'JieP_ICCV2017') == 1
+        if  strcmp(method, 'Li_TIP2018') == 1
+            Im = double(imread(fullfile(Original_image_dir, im_dir(i).name)));
+            
+            para.epsilon_stop_L = 1e-3;
+            para.epsilon_stop_R = 1e-3;
+            para.epsilon = 10/255;
+            para.u = 1;
+            para.ro = 1.5;
+            para.lambda = 5;
+            para.beta = 0.01;
+            para.omega = 0.01;
+            para.delta = 10;
+            
+            gamma = 2.2;
+            [R, L, N] = Li_TIP2018(Im, para);
+            eIm = R.*L.^(1/gamma);
+            imwrite(eIm/255, [write_img_dir method '_' name{1} '.jpg']);
+            NIQEs(i) = niqe(eIm/255);
+            LOEs(i) = LOE(eIm/255, Im/255);
+            fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, NIQEs(i), LOEs(i));
+        elseif strcmp(method, 'JieP_ICCV2017') == 1
             Im=im2double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
             gamma=2.2;
             [I, R] = jiep(Im);
