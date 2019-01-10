@@ -8,22 +8,27 @@ im_num = length(im_dir);
 
 % metrics
 addpath('metrics');
+metrics = {'LOE', 'NIQE'};
 
-% write_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
-% write_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
-write_dir  = ['/home/csjunxu/Paper/Enhancement/Results_LowLight/'];
-if ~isdir(write_dir)
-    mkdir(write_dir);
+method = 'Our';
+
+% write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
+% write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
+write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_LowLight/';
+write_img_dir = [write_mat_dir method '/'];
+if ~isdir(write_img_dir)
+    mkdir(write_img_dir);
 end
 
 gamma=2.2;
 alpha = 0.001;
 beta = 0.0001;
 for pI = [.1:.1:2]
-    for pR = [.3:.1:2]
+    for pR = [.1:.1:2]
         NIQEs = zeros(im_num,1);
         LOEs = zeros(im_num,1);
         for i = 1:im_num
+            name = regexp(im_dir(i).name, '\.', 'split');
             Im=im2double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
             [I, R] = enhancer(Im, alpha, beta, pI, pR);
             hsv = rgb2hsv(Im);
@@ -34,10 +39,10 @@ for pI = [.1:.1:2]
             NIQEs(i) = niqe(eIm);
             LOEs(i) = LOE(eIm, Im);
             fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, NIQEs(i), LOEs(i));
-            % imwrite(enhance, [write_dir im_dir(i).name '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
-            %    num2str(alpha) '_beta=' num2str(beta) '.jpg'])
+            % imwrite(enhance, [write_img_dir method '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
+            %    num2str(alpha) '_beta=' num2str(beta) '_' name{1} '.jpg'])
         end
-        matname = [write_dir '/Our_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
+        matname = [write_mat_dir '/Our_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
             num2str(alpha) '_beta=' num2str(beta) '.mat'];
         mNIQEs = mean(NIQEs);
         mLOEs = mean(LOEs);

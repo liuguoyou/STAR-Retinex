@@ -13,7 +13,7 @@ metrics = {'LOE', 'NIQE'};
 methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'HE'};
 addpath('methods');
 
-for m = 1:length(methods)
+for m = 2:3%1:length(methods)
     method = methods{m};
     % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
@@ -36,11 +36,8 @@ for m = 1:length(methods)
             hsv(:,:,3) = S_gamma;
             eIm = hsv2rgb(hsv);
             imwrite(eIm, [write_img_dir method '_' name{1} '.jpg']);
-            NIQEs(i) = niqe(eIm);
-            LOEs(i) = LOE(eIm, Im);
-            fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, NIQEs(i), LOEs(i));
         elseif strcmp(method, 'WVM_CVPR2016') == 1
-            Im=double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
+            Im=idouble( imread(fullfile(Original_image_dir, im_dir(i).name)) );
             if size(Im,3)>1
                 HSV = rgb2hsv(Im);   % RGB space to HSV  space
                 S = HSV(:,:,3);       % V layer
@@ -57,17 +54,14 @@ for m = 1:length(methods)
             HSV(:,:,3) = enhanced_V;
             eIm = hsv2rgb(HSV);
             imwrite(eIm/255, [write_img_dir method '_' name{1} '.jpg']);
-            NIQEs(i) = niqe(eIm/255);
-            LOEs(i) = LOE(eIm/255, Im/255);
-            fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, NIQEs(i), LOEs(i));
         elseif strcmp(method, 'HE') == 1
             Im=im2double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
             [eIm, ~] = histeq(Im);
             imwrite(eIm, [write_img_dir method '_' name{1} '.jpg']);
-            NIQEs(i) = niqe(eIm);
-            LOEs(i) = LOE(eIm, Im);
-            fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, NIQEs(i), LOEs(i));
         end
+        NIQEs(i) = niqe(eIm);
+        LOEs(i) = LOE(eIm, Im);
+        fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, NIQEs(i), LOEs(i));
         % imwrite(eIm, [write_img_dir method '_' name{1} '.jpg']);
     end
     matname = [write_mat_dir method '.mat'];
