@@ -36,8 +36,8 @@ for pI = [.1:.1:2]
             S_gamma = R .* I_gamma;
             hsv(:,:,3) = S_gamma;
             eIm = hsv2rgb(hsv);
-            NIQEs(i) = niqe(eIm);
-            LOEs(i) = LOE(eIm, Im);
+            NIQEs(i) = niqe(uint8(eIm*255)); %range: 0~255 -> uint8
+            LOEs(i) = LOE(eIm, Im); % range: 0~1
             fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, NIQEs(i), LOEs(i));
             % imwrite(enhance, [write_img_dir method '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
             %    num2str(alpha) '_beta=' num2str(beta) '_' name{1} '.jpg'])
