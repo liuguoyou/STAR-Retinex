@@ -3,7 +3,7 @@ clear;
 % test images
 % choose test dataset
 datasets = {'LowLight', 'NASA', 'LDR'};
-Testset = datasets{1}; % select test dataset
+Testset = datasets{3}; % select test dataset
 Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
 %%% read images
 ext         =  {'*.jpg','*.JPG','*.png','*.bmp'};
