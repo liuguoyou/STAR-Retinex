@@ -1,11 +1,16 @@
 clc;
 clear;
 % test images
-% Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/LowLightImages/';
-% Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/NASA/';
-Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/LDR_TEST_IMAGES_DICM/';
-fpath = fullfile(Original_image_dir, '*.jpg');
-im_dir  = dir(fpath);
+% choose test dataset
+datasets = {'LowLight', 'NASA', 'LDR'};
+Testset = datasets{1}; % select test dataset
+Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
+%%% read images
+ext         =  {'*.jpg','*.JPG','*.png','*.bmp'};
+im_dir   =  [];
+for i = 1 : length(ext)
+    im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
+end
 im_num = length(im_dir);
 
 % metrics
@@ -19,13 +24,12 @@ methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'SRIE_TIP2015', ...
     'NPE_TIP2013', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Li_TIP2018'};
 % Li_TIP2018 will run out of memory on 13.bmp
 
+% write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
+% write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
+write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
+% write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
 for m = 1:length(methods)
     method = methods{m};
-    % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
-    % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
-    % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_LowLight/';
-    % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_LDR/';
     write_img_dir = [write_mat_dir method '/'];
     if ~isdir(write_img_dir)
         mkdir(write_img_dir);
@@ -36,7 +40,7 @@ for m = 1:length(methods)
     for i = 1:im_num
         name = regexp(im_dir(i).name, '\.', 'split');
         if strcmp(method, 'JieP_ICCV2017') == 1
-            Im=im2double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
+            Im=im2double( imread(fullfile(Test_dir, im_dir(i).name)) );
             gamma=2.2;
             [I, R] = jiep(Im);
             hsv = rgb2hsv(Im);
@@ -48,7 +52,7 @@ for m = 1:length(methods)
             Im = uint8(Im*255);
             eIm = uint8(eIm*255);
         elseif strcmp(method, 'WVM_CVPR2016') == 1
-            Im=double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
+            Im=double( imread(fullfile(Test_dir, im_dir(i).name)) );
             if size(Im,3)>1
                 HSV = rgb2hsv(Im);   % RGB space to HSV  space
                 S = HSV(:,:,3);       % V layer
@@ -68,13 +72,13 @@ for m = 1:length(methods)
             Im = uint8(Im);
             eIm = uint8(eIm*255);
         elseif strcmp(method, 'MF_SP2016') == 1
-            Im=double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
+            Im=double( imread(fullfile(Test_dir, im_dir(i).name)) );
             eIm = MF_SP2016(Im);
             % convert Im and eIm to uint8
             Im = uint8(Im);
             eIm = uint8(eIm);
         elseif strcmp(method, 'SRIE_TIP2015') == 1
-            Im = imread(fullfile(Original_image_dir, im_dir(i).name));
+            Im = imread(fullfile(Test_dir, im_dir(i).name));
             alpha = 1000; beta= 0.01; gamma = 0.1; lambda = 10; % set parameters
             error_R = 10; error_I = 10; % initial stopping criteria error_R and error_I
             stop = 0.1;  % stopping criteria
@@ -92,30 +96,30 @@ for m = 1:length(methods)
             eIm = uint8(eIm);
         elseif strcmp(method, 'NPE_TIP2013') == 1
             addpath('methods/NPE_TIP2013/');
-            Im = imread(fullfile(Original_image_dir, im_dir(i).name));
-            eIm=NPEA(fullfile(Original_image_dir, im_dir(i).name));
+            Im = imread(fullfile(Test_dir, im_dir(i).name));
+            eIm=NPEA(fullfile(Test_dir, im_dir(i).name));
         elseif strcmp(method, 'BPDHE_TCE2010') == 1
-            Im = imread(fullfile(Original_image_dir, im_dir(i).name));
+            Im = imread(fullfile(Test_dir, im_dir(i).name));
             eIm = BPDHE_TCE2010(Im);
         elseif   strcmp(method, 'MSRCR') == 1
             addpath('methods/multiscaleRetinex/');
-            Im = imread(fullfile(Original_image_dir, im_dir(i).name));
+            Im = imread(fullfile(Test_dir, im_dir(i).name));
             eIm = multiscaleRetinex(Im, 'MSRCR');
             % convert Im and eIm to uint8
             eIm = uint8(eIm*255);
         elseif strcmp(method, 'SSR_TIP1997') == 1
-            Im = imread(fullfile(Original_image_dir, im_dir(i).name));
+            Im = imread(fullfile(Test_dir, im_dir(i).name));
             eIm = SSR_TIP1997(Im, 10000);
             % convert Im and eIm to uint8
             eIm = uint8(eIm);
         elseif strcmp(method, 'HE') == 1
-            Im=im2double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
+            Im=im2double( imread(fullfile(Test_dir, im_dir(i).name)) );
             [eIm, ~] = histeq(Im);
             % convert Im and eIm to uint8
             Im = uint8(Im*255);
             eIm = uint8(eIm*255);
         elseif strcmp(method, 'Li_TIP2018') == 1
-            Im = double(imread(fullfile(Original_image_dir, im_dir(i).name)));
+            Im = double(imread(fullfile(Test_dir, im_dir(i).name)));
             para.epsilon_stop_L = 1e-3;
             para.epsilon_stop_R = 1e-3;
             para.epsilon = 10/255;
@@ -143,6 +147,6 @@ for m = 1:length(methods)
     mNIQEs = mean(NIQEs);
     mLOEs = mean(LOEs);
     mVLDs = mean(VLDs);
-    fprintf('Mean NIQE = %2.4f, Mean LOE = %2.4f\n', mNIQEs, mLOEs);
+    fprintf('mNIQE = %2.4f, mLOE = %2.4f, mVLD = %2.4f\n', mNIQEs, mLOEs, mVLDs);
     save(matname, 'NIQEs', 'mNIQEs', 'LOEs', 'mLOEs', 'VLDs', 'mVLDs');
 end

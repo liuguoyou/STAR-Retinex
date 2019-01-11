@@ -47,10 +47,8 @@ minGI=min(GI(:));
 maxGI=max(GI(:));
 
 %%%% Contrast Computation at 5%
-tic
 [C1, Crr1]=functionContrastAt5PerCent(RIm);
 [Ci, Crri]=functionContrastAt5PerCent(Im);
-toc
 
 minCrri=min(Crri(:));
 maxCrri=max(Crri(:));
