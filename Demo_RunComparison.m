@@ -1,6 +1,6 @@
 clc;clear;
 %%% choose test dataset
-datasets = {'LowLight', 'NASA', 'LDR', 'VV'};
+datasets = {'LowLight', 'NASA', 'LDR', 'NPE', 'VV'};
 for d = 1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
@@ -11,39 +11,24 @@ for d = 1:length(datasets)
         im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
     end
     im_num = length(im_dir);
-    
-    %%% metrics
-    addpath(genpath('metrics'));
-    % addpath('/home/csjunxu/Paper/Enhancement/Metrics/vifvec_release');
-    metrics = {'LOE', 'NIQE', 'VLD', 'VIF', 'ARISMC'};
-    % LOE: 0~1; 
-    % NIQE, VLD, VIF, ARISMC: uint8;
-    % ARISMC(1) Luminance component only
-    % ARISMC(2) Luminance and chromatic components
     %%% methods
     addpath('methods');
     methods = {'Dong_ICME2011', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', ...
         'SRIE_TIP2015', 'NPE_TIP2013', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', ...
         'HE'};
-    % 'Li_TIP2018' : will run out of memory on 13.bmp or SVD include NaN or
-    % Inf
+    % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
     
     %%% begin comparisons
     % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 1% 1:length(methods)
+    for m = 1:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
             mkdir(write_img_dir);
         end
-        NIQEs = zeros(im_num,1);
-        LOEs = zeros(im_num,1);
-        VLDs = zeros(im_num,1);
-        VIFs = zeros(im_num,1);
-        ARISMCs = zeros(im_num,2);
         for i = 1:im_num
             name = regexp(im_dir(i).name, '\.', 'split');
             if strcmp(method, 'Dong_ICME2011') == 1
@@ -151,24 +136,6 @@ for d = 1:length(datasets)
             end
             %%% image level metrics
             imwrite(eIm, [write_img_dir method '_' name{1} '.jpg']);
-            ARISMCs(i,:) = ARISMC(eIm);
-            NIQEs(i) = niqe(eIm);
-            LOEs(i) = LOE(im2double(eIm), im2double(Im));
-            VLDs(i) = VLD(eIm, Im);
-            VIFs(i) = VIF(Im,eIm);
-            fprintf('%s : NIQE = %2.4f, LOE = %2.4f, VLD = %2.4f, VIF = %2.4f\n',...
-                im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i));
         end
-        %%% set level metrics
-        matname = [write_mat_dir method '.mat'];
-        mNIQEs = mean(NIQEs);
-        mLOEs = mean(LOEs);
-        mVLDs = mean(VLDs);
-        mVIFs = mean(VIFs);
-        mARISMCs = mean(ARISMCs);
-        fprintf('mNIQE = %2.4f, mLOE = %2.4f, mVLD = %2.4f, mVIF = %2.4f\n', ...
-            mNIQEs, mLOEs, mVLDs, mVIFs);
-        save(matname, 'NIQEs', 'mNIQEs', 'LOEs', 'mLOEs', 'VLDs', 'mVLDs', ...
-            'VIFs', 'mVIFs', 'ARISMCs', 'mARISMCs');
     end
 end
