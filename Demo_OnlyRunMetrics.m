@@ -1,15 +1,17 @@
 clc;
 clear;
 % test images
-% Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/LowLightImages/'; 
-Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/NASA/'; 
+Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/LowLightImages/'; 
+% Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/NASA/'; 
+% Original_image_dir  =    '/home/csjunxu/Paper/Enhancement/Dataset/LDR_TEST_IMAGES_DICM/'; 
 fpath = fullfile(Original_image_dir, '*.jpg');
 im_dir  = dir(fpath);
 im_num = length(im_dir);
 
 % metrics
 addpath('metrics');
-metrics = {'LOE', 'NIQE'};
+addpath('/home/csjunxu/Paper/Enhancement/Metrics/vifvec_release');
+metrics = {'LOE', 'NIQE', 'VLD'};
 % LOE:0~1; NIQE uint8
 % methods
 addpath('methods');
@@ -17,26 +19,31 @@ methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'SRIE_TIP2015', ...
     'NPE_TIP2013', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Li_TIP2018'};
 % Li_TIP2018 will run out of memory on 13.bmp
 
-for m = 1:length(methods)
+for m = 6%1:length(methods)
     method = methods{m};
     % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_LowLight/';
-    write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
+    % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
+    write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_LDR/';
     write_img_dir = [write_mat_dir method '/'];
     if ~isdir(write_img_dir)
         mkdir(write_img_dir);
     end
     NIQEs = zeros(im_num,1);
     LOEs = zeros(im_num,1);
+    VLDs = zeros(im_num,1);
     for i = 1:im_num
         name = regexp(im_dir(i).name, '\.', 'split');
         if strcmp(method, 'BPDHE_TCE2010') == 1
+            Enhance_image_dir = ['/home/csjunxu/Paper/Enhancement/Results_LowLight/' method]; 
+            efpath = fullfile(Enhance_image_dir, '*.jpg');
+            eim_dir  = dir(efpath);
             Im = imread(fullfile(Original_image_dir, im_dir(i).name));
-            eIm = BPDHE_TCE2010(Im);
-            imwrite(eIm, [write_img_dir method '_' name{1} '.jpg']);
+            eIm = imread(fullfile(Enhance_image_dir, eim_dir(i).name));
             NIQEs(i) = niqe(eIm);
             LOEs(i) = LOE(im2double(eIm), im2double(Im));
+            VLDs(i) = VLD(eIm, Im);
             fprintf('%s : NIQE = %2.4f, LOE = %2.4f\n', im_dir(i).name, ...
                 NIQEs(i), LOEs(i));
         elseif strcmp(method, 'MSRCR') == 1

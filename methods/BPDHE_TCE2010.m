@@ -1,6 +1,6 @@
 function d = BPDHE_TCE2010(im)
-
-im = im2uint8(im);
+% input: im (in unit8 format)
+% output: d (in unit8 format)
 
 hsv = rgb2hsv(im);
 h = hsv(:,:,1);
