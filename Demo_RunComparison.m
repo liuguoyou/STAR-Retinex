@@ -1,29 +1,29 @@
-clc;
-clear;
-% test images
-% choose test dataset
-datasets = {'LowLight', 'NASA', 'LDR'};
+clc;clear;
+%%% choose test dataset
+datasets = {'LowLight', 'NASA', 'LDR', 'VV'};
 Testset = datasets{3}; % select test dataset
 Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
 %%% read images
-ext         =  {'*.jpg','*.JPG','*.png','*.bmp'};
+ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
 im_dir   =  [];
 for i = 1 : length(ext)
     im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
 end
 im_num = length(im_dir);
 
-% metrics
+%%% metrics
 addpath('metrics');
 addpath('/home/csjunxu/Paper/Enhancement/Metrics/vifvec_release');
 metrics = {'LOE', 'NIQE', 'VLD'};
 % LOE:0~1; NIQE, VLD: uint8;
-% methods
+%%% methods
 addpath('methods');
 methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'SRIE_TIP2015', ...
-    'NPE_TIP2013', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Li_TIP2018'};
+    'NPE_TIP2013', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', ...
+    'Li_TIP2018'};
 % Li_TIP2018 will run out of memory on 13.bmp
 
+%%% begin comparisons
 % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
 % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
 write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
@@ -136,6 +136,7 @@ for m = 1:length(methods)
             Im = uint8(Im);
             eIm = uint8(eIm);
         end
+        %%% image level metrics
         imwrite(eIm, [write_img_dir method '_' name{1} '.jpg']);
         NIQEs(i) = niqe(eIm);
         LOEs(i) = LOE(im2double(eIm), im2double(Im));
@@ -143,6 +144,7 @@ for m = 1:length(methods)
         fprintf('%s : NIQE = %2.4f, LOE = %2.4f, VLD = %2.4f\n', im_dir(i).name, ...
             NIQEs(i), LOEs(i), VLDs(i));
     end
+    %%% set level metrics
     matname = [write_mat_dir method '.mat'];
     mNIQEs = mean(NIQEs);
     mLOEs = mean(LOEs);

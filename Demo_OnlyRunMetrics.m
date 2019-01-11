@@ -5,7 +5,7 @@ datasets = {'LowLight', 'NASA', 'LDR'};
 Testset = datasets{1}; % select test dataset
 Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
 %%% read images
-ext         =  {'*.jpg','*.JPG','*.png','*.bmp'};
+ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
 im_dir   =  [];
 for i = 1 : length(ext)
     im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
@@ -19,7 +19,7 @@ metrics = {'LOE', 'NIQE', 'VLD'};
 % LOE:0~1; NIQE/VLD: uint8
 % methods
 addpath('methods');
-methods = {'None', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'SRIE_TIP2015', ...
+methods = {'Our', 'None', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'SRIE_TIP2015', ...
     'NPE_TIP2013', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Li_TIP2018'};
 % Li_TIP2018 will run out of memory on 13.bmp
 
