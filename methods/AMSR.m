@@ -1,10 +1,10 @@
-function d = amsr(im,sigma1,sigma2,sigma3)
+function d = AMSR_2013(im,sigma1,sigma2,sigma3)
 
 if ~exist('sigma1','var'),sigma1 = 15;end
 if ~exist('sigma2','var'),sigma2 = 80;end
 if ~exist('sigma3','var'),sigma3 = 250;end
 
-im = im2double(im); % double --> im2double
+im = double(im); % double --> im2double
 gausKernel1 = fspecial('gaussian',[sigma1 sigma1],5);
 gausKernel2 = fspecial('gaussian',[sigma2 sigma2],20);
 gausKernel3 = fspecial('gaussian',[sigma3 sigma3],50);
@@ -70,13 +70,13 @@ Y_amsr = omega0.*Y + omega1.*Y_ssr1 + omega2.*Y_ssr2 + omega3.*Y_ssr3;
 ratio = Y_amsr./Y;
 
 % modified: uint8 --> im2uint8
-hsv = rgb2hsv(im2uint8(im));
-v = hsv(:,:,3);%.*255;
+hsv = rgb2hsv(uint8(im));
+v = hsv(:,:,3).*255;%.*255;
 v = 0.5.*(ratio.*(v+Y)+v-Y);
 hsv(:,:,3) = v./255;
-%d = uint8(hsv2rgb(hsv).*255);
-d = double(hsv2rgb(hsv)); % modified
-d = min(max(d,0),1); % add
+d = uint8(hsv2rgb(hsv).*255);
+%d = double(hsv2rgb(hsv)); % modified
+%d = min(max(d,0),1); % add
 
 % r = 0.5.*(ratio.*(im(:,:,1)+Y)+im(:,:,1)-Y);
 % g = 0.5.*(ratio.*(im(:,:,2)+Y)+im(:,:,2)-Y);
