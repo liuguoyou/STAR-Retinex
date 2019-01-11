@@ -24,9 +24,12 @@ for d = 1:length(datasets)
     
     %%% methods
     addpath('methods');
-    methods = {'None', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'SRIE_TIP2015', ...
-        'NPE_TIP2013', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Li_TIP2018'};
-    % Li_TIP2018 will run out of memory on 13.bmp
+    methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'NPE_TIP2013', ...
+        'SRIE_TIP2015', 'LDR_TIP2013', 'CVC_TIP2011', 'WAHE_TIP2009', ...
+        'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Dong_ICME2011', ...
+        'BIMEF_2019'};
+    
+    % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
     
     %%% save
     % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
