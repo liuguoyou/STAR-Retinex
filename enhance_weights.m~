@@ -1,12 +1,9 @@
-function [ I, R] = enhancer( src, alpha, beta, pI, pR, vareps, r, r0, K, debug)
+function [ I, R] = enhance_weights( src, alpha, beta, pI, pR, vareps, r, r0, K, debug)
 if (~exist('alpha','var'))	% alpha -- parameter for shape
     alpha = 0.001;
 end
 if (~exist('beta','var'))	% beta -- parameter for texture
     beta = 0.0001;
-end
-if (~exist('lambda','var'))	% lambda -- parameter for illumination
-    lambda = 0.25;
 end
 if (~exist('vareps','var')) % vareps -- stopping parameter
     vareps = 0.01;
@@ -55,8 +52,15 @@ for iter = 1:K
     uy = max(abs(avgIy.^pI),eps).^(-1);  % uy in Eq.(11) similarly
     ux(:,end) = 0;
     uy(end,:) = 0;
+    %%% show the weights
+    imwrite((Ix-min(min(Ix)))./(max(max(Ix))-min(min(Ix))), 'Ix.jpg')
+    imwrite((Iy-min(min(Iy)))./(max(max(Iy))-min(min(Iy))), 'Iy_cai.jpg')
+    imwrite((avgIx-min(min(avgIx)))./(max(max(avgIx))-min(min(avgIx))), 'avgIx_cai.jpg')
+    imwrite((avgIy-min(min(avgIy)))./(max(max(avgIy))-min(min(avgIy))), 'avgIy_cai.jpg')
+    imwrite((ux-min(min(ux)))./(max(max(ux))-min(min(ux))), 'ux_cai.jpg')
+    imwrite((uy-min(min(uy)))./(max(max(uy))-min(min(uy))), 'uy_cai.jpg')
     
-    I = solveLinearSystem(S, R, ux, uy, alpha, B, lambda);  % Eq.(12)
+    I = solveLinearSystem(S, R, ux, uy, alpha);  % Eq.(12)
     eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');       % iterative error of I
 
     %% algorithm for P2
@@ -69,6 +73,11 @@ for iter = 1:K
     vy = max(abs(avgRy.^pR),eps).^(-1);                            % vy in Eq.(11)
     vx(:,end) = 0;
     vy(end,:) = 0;
+    %%%
+        imwrite((Rx-min(min(Rx)))./(max(max(Rx))-min(min(Rx))), ['Rx_cai.jpg')
+    imwrite((Ry-min(min(Ry)))./(max(max(Ry))-min(min(Ry))), 'Ry_cai.jpg')
+    imwrite((vx-min(min(vx)))./(max(max(vx))-min(min(vx))), 'vx_cai.jpg')
+    imwrite((vy-min(min(vy)))./(max(max(vy))-min(min(vy))), 'vy_cai.jpg')
     
     R = solveLinearSystem(S, I, vx, vy, beta);            	% Eq.(13)
     eplisonR = norm(R-preR, 'fro')/norm(preR, 'fro');       % iterative error of R
