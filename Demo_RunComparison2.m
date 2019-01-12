@@ -24,7 +24,7 @@ for d = 1:length(datasets)
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 8:length(methods)
+    for m = 1:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
@@ -69,7 +69,7 @@ for d = 1:length(datasets)
                 eIm = hsv2rgb(HSV);
                 % convert Im and eIm to uint8
                 Im = uint8(Im);
-                eIm = uint8(eIm*255);
+                eIm = uint8(eIm);
             elseif strcmp(method, 'MF_SP2016') == 1
                 Im=double( imread(fullfile(Test_dir, im_dir(i).name)) );
                 eIm = MF_SP2016(Im);
@@ -108,7 +108,19 @@ for d = 1:length(datasets)
                 eIm = uint8(eIm*255);
             elseif strcmp(method, 'SSR_TIP1997') == 1
                 Im = imread(fullfile(Test_dir, im_dir(i).name));
-                eIm = SSR_TIP1997(Im, 10000);
+                if size(Im,3)>1
+                    HSV = rgb2hsv(Im);   % RGB space to HSV  space
+                    X = HSV(:,:,3);       % V layer
+                else
+                    X = Im;              % gray image
+                end
+                [R,L] = SSR_TIP1997(X, [], 1);
+                %%% Gamma correction
+                gamma = 2.2;
+                L_gamma = ((L/255).^(1/gamma));
+                enhanced_V = R .* L_gamma;
+                HSV(:,:,3) = enhanced_V;
+                eIm = hsv2rgb(HSV);
                 % convert Im and eIm to uint8
                 eIm = uint8(eIm);
             elseif strcmp(method, 'HE') == 1
@@ -122,7 +134,7 @@ for d = 1:length(datasets)
                 Im=imread(fullfile(Test_dir, im_dir(i).name));
                 eIm = BIMEF_2019(Im);
                 % convert Im and eIm to uint8
-                eIm = uint8(eIm);
+                eIm = uint8(eIm*255);
             elseif strcmp(method, 'LDR_TIP2013') == 1
                 addpath('methods/LDR_TIP2013/');
                 Im=imread(fullfile(Test_dir, im_dir(i).name));
