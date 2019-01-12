@@ -5,38 +5,27 @@ end
 if (~exist('beta','var'))	% beta -- parameter for texture
     beta = 0.0001;
 end
-if (~exist('lambda','var'))	% lambda -- parameter for illumination
-    lambda = 0.25;
-end
 if (~exist('vareps','var')) % vareps -- stopping parameter
     vareps = 0.01;
-end
-if (~exist('K','var'))      % K -- maximum iterations
-    K = 20;
 end
 if (~exist('r','var'))      % r -- the size of Omega in Eq.(3)
     r = 3;
 end
-if (~exist('r0','var'))     % r0 -- the size of Omega in Eq.(7)
-    r0 = 5;
+if (~exist('K','var'))      % K -- maximum iterations
+    K = 20;
 end
 if (~exist('debug','var'))  % debug -- set debug/release
     debug = true;
 end
 r = (r-1)/2;
-r0 = (r0-1)/2;
 eps=0.0001;
 if size(src,3)==1
     S = src;
-    gray = src;
 else
     hsv = rgb2hsv(src);
     S = hsv(:,:,3);
-    gray = rgb2gray(src);
 end
 
-B = convMax(single(S),r0);                              % Eq.(7)
-B = guidedfilter(gray, B, 20, eps);                     % use guided filer to refine bright channel
 I=S;                                                    % initialize I_0
 R=ones(size(S));                                        % initialize R_0
 if debug == true
@@ -56,7 +45,7 @@ for iter = 1:K
     ux(:,end) = 0;
     uy(end,:) = 0;
     
-    I = solveLinearSystem(S, R, ux, uy, alpha, B, lambda);  % Eq.(12)
+    I = solveLinearSystem(S, R, ux, uy, alpha);  % Eq.(12)
     eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');       % iterative error of I
 
     %% algorithm for P2
