@@ -1,11 +1,11 @@
 clc;clear;
 %%% choose test dataset
 datasets = {'LowLight', 'NASA', 'LDR', 'NPE', 'VV'};
-for d = 1:length(datasets)
+ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
+for d = 3%1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
-    ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
     im_dir   =  [];
     for i = 1 : length(ext)
         im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
