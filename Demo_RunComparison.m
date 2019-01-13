@@ -20,11 +20,9 @@ for d = 4%1:length(datasets)
     % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
     
     %%% begin comparisons
-    % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
-    % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 2%1:length(methods)
+    for m = 1:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
