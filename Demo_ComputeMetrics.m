@@ -35,7 +35,7 @@ for d = 1:length(datasets)
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
     
     %%% begin
-    for m = 1:2:length(methods)-1
+    for m = 1:length(methods)
         method = methods{m};
         if strcmp(method, 'None') == 1
             Enhance_dir = Test_dir;

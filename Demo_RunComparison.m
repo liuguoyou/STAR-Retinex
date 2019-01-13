@@ -69,7 +69,7 @@ for d = 1:length(datasets)
                 eIm = hsv2rgb(HSV);
                 % convert Im and eIm to uint8
                 Im = uint8(Im);
-                eIm = uint8(eIm*255);
+                eIm = uint8(eIm);
             elseif strcmp(method, 'MF_SP2016') == 1
                 Im=double( imread(fullfile(Test_dir, im_dir(i).name)) );
                 eIm = MF_SP2016(Im);
