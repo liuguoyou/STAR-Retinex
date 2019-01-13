@@ -3,10 +3,10 @@ clc;clear;
 datasets = {'LowLight', 'NASA', 'LDR', 'NPE', 'VV'};
 for d = 1:length(datasets)
     Testset = datasets{d}; % select test dataset
-    Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
+    Test_dir= fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
-    ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
-    im_dir   =  [];
+    ext     =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
+    im_dir  =  [];
     for i = 1 : length(ext)
         im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
     end
@@ -24,7 +24,7 @@ for d = 1:length(datasets)
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 1:length(methods)
+    for m = 11%1:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
