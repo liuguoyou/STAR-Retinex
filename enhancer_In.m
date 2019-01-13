@@ -1,4 +1,4 @@
-function [ I, R] = enhancer_weights( src, alpha, beta, pI, pR, r, K, vareps, debug)
+function [ I, R] = enhancer_In( src, alpha, beta, pI, pR, r, K, vareps, debug)
 if (~exist('alpha','var'))	% alpha -- parameter for shape
     alpha = 0.001;
 end
@@ -50,8 +50,8 @@ for iter = 1:K
     %imwrite((Iy-min(min(Iy)))./(max(max(Iy))-min(min(Iy))), 'weights/Iy_cai.jpg')
     %imwrite((avgIx-min(min(avgIx)))./(max(max(avgIx))-min(min(avgIx))), 'weights/avgIx_cai.jpg')
     %imwrite((avgIy-min(min(avgIy)))./(max(max(avgIy))-min(min(avgIy))), 'weights/avgIy_cai.jpg')
-    imwrite((ux-min(min(ux)))./(max(max(ux))-min(min(ux))), ['weights/ux_pI' num2str(pI) '.jpg'])
-    imwrite((uy-min(min(uy)))./(max(max(uy))-min(min(uy))), ['weights/uy_pI' num2str(pI) '.jpg'])
+    imwrite((ux-min(min(ux)))./(max(max(ux))-min(min(ux))), ['ux_pI' num2str(pI) '.jpg'])
+    imwrite((uy-min(min(uy)))./(max(max(uy))-min(min(uy))), ['uy_pI' num2str(pI) '.jpg'])
     
     I = solveLinearSystem(S, R, ux, uy, alpha);  % Eq.(12)
     eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');       % iterative error of I
@@ -69,8 +69,8 @@ for iter = 1:K
     %%%
     %imwrite((Rx-min(min(Rx)))./(max(max(Rx))-min(min(Rx))), 'weights/Rx_cai.jpg')
     %imwrite((Ry-min(min(Ry)))./(max(max(Ry))-min(min(Ry))), 'weights/Rx_cai.jpg')
-    imwrite((vx-min(min(vx)))./(max(max(vx))-min(min(vx))), ['weights/vx_pR' num2str(pR) '.jpg'])
-    imwrite((vy-min(min(vy)))./(max(max(vy))-min(min(vy))), ['weights/vy_pR' num2str(pR) '.jpg'])
+    imwrite((vx-min(min(vx)))./(max(max(vx))-min(min(vx))), ['vx_pR' num2str(pR) '.jpg'])
+    imwrite((vy-min(min(vy)))./(max(max(vy))-min(min(vy))), ['vy_pR' num2str(pR) '.jpg'])
     
     R = solveLinearSystem(S, I, vx, vy, beta);            	% Eq.(13)
     eplisonR = norm(R-preR, 'fro')/norm(preR, 'fro');       % iterative error of R

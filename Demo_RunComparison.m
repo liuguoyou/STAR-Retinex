@@ -1,7 +1,7 @@
 clc;clear;
 %%% choose test dataset
 datasets = {'LowLight', 'NASA', 'LDR', 'NPE', 'VV'};
-for d = 1:length(datasets)
+for d = 4%1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images

@@ -33,8 +33,8 @@ for d = 1%1:length(datasets)
     alpha = 0.001;
     beta = 0.0001;
     r = 3;
-    for pI = [.1:.1:2]
-        for pR = [.1:.1:2]
+    for pI = [2]
+        for pR = [1]
             NIQEs = zeros(im_num,1);
             LOEs = zeros(im_num,1);
             VLDs = zeros(im_num,1);
@@ -47,7 +47,8 @@ for d = 1%1:length(datasets)
             for i = 23%1:im_num
                 name = regexp(im_dir(i).name, '\.', 'split');
                 Im=im2double( imread(fullfile(Test_dir, im_dir(i).name)) );
-                [I, R] = enhancer_OutIn(Im, alpha, beta, pI, pR, r);
+                %[I, R] = enhancer_OutIn(Im, alpha, beta, pI, pR, r);
+                [I, R] = enhancer_In(Im, alpha, beta, pI, pR, r);
                 hsv = rgb2hsv(Im);
                 I_gamma = I.^(1/gamma);
                 S_gamma = R .* I_gamma;
@@ -69,7 +70,7 @@ for d = 1%1:length(datasets)
                 %fprintf('%s : NIQE = %2.2f, LOE = %2.2f, VLD = %2.2f, VIF = %2.2f, AB = %2.2f, DE = %2.2f\n', ...
                 %    im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i), ABs(i), ...
                 %    DEs(i));
-                imwrite(eIm, [write_img_dir method '_' name{1} '_mIpI' num2str(pI) ...
+                imwrite(eIm, [method '_mIpI' num2str(pI) ...
                     '_mRpR' num2str(pR) '_alpha' num2str(alpha) '_beta' num2str(beta) ...
                     '_r' num2str(r) '_' name{1} '.jpg']);
                 fprintf([Testset ', ' method ', ' name{1} ' is done\n']);
