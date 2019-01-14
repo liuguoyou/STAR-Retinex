@@ -40,13 +40,13 @@ for iter = 1:K
     Iy = diff(I,1,1); Iy = padarray(Iy, [1 0], 'post');
     avgIx=convBox( single(Ix), r);
     avgIy=convBox( single(Iy), r);
-    ux = max(abs(avgIx.^pI),eps).^(-1);  % ux in Eq.(11) avgIx.^pI > avgIx.*Ix > Ix.^2
-    uy = max(abs(avgIy.^pI),eps).^(-1);  % uy in Eq.(11) similarly
+    ux = max(abs(avgIx.^pI),eps).^(-1);  % structure map avgIx.^pI > avgIx.*Ix > Ix.^2
+    uy = max(abs(avgIy.^pI),eps).^(-1);  % structure map 
     ux(:,end) = 0;
     uy(end,:) = 0;
     
     I = solveLinearSystem(S, R, ux, uy, alpha);  % Eq.(12)
-    eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');       % iterative error of I
+    eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');   % iterative error of I
 
     %% algorithm for P2
     R=S./I;
@@ -54,13 +54,13 @@ for iter = 1:K
     Ry = diff(R,1,1); Ry = padarray(Ry, [1 0], 'post');
     avgRx=convBox( single(Rx), r);
     avgRy=convBox( single(Ry), r);
-    vx = max(abs(avgRx.^pR),eps).^(-1);                            % vx in Eq.(11)
-    vy = max(abs(avgRy.^pR),eps).^(-1);                            % vy in Eq.(11)
+    vx = max(abs(avgRx.^pR),eps).^(-1);  % texture map
+    vy = max(abs(avgRy.^pR),eps).^(-1);  % texture map
     vx(:,end) = 0;
     vy(end,:) = 0;
     
     R = solveLinearSystem(S, I, vx, vy, beta);            	% Eq.(13)
-    eplisonR = norm(R-preR, 'fro')/norm(preR, 'fro');       % iterative error of R
+    eplisonR = norm(R-preR, 'fro')/norm(preR, 'fro');   % iterative error of R
     
     %% iteration until convergence
     if debug == true
