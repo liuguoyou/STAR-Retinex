@@ -16,7 +16,7 @@ for d = 1:length(datasets)
     methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'NPE_TIP2013', ...
         'SRIE_TIP2015', 'LDR_TIP2013', 'CVC_TIP2011', 'WAHE_TIP2009', ...
         'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Dong_ICME2011', ...
-        'BIMEF_2019'};
+        'BIMEF_2019', 'Li_TIP2018'};
     % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
     
     %%% begin comparisons
@@ -24,7 +24,7 @@ for d = 1:length(datasets)
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 12:length(methods)
+    for m = 1:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
