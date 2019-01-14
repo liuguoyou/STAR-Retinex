@@ -1,6 +1,6 @@
 clc;clear;
 %%% choose test dataset
-datasets = {'NPE', 'LowLight', 'NASA', 'LDR', 'VV'};
+datasets = {'LowLight', 'NPE', 'NASA', 'LDR', 'VV'};
 %%% metrics
 addpath(genpath('metrics'));
 % addpath('/home/csjunxu/Paper/Enhancement/Metrics/vifvec_release');
@@ -32,7 +32,7 @@ for d = 2%1:length(datasets)
     gamma=2.2;
     alpha = 0.001;
     beta = 0.0001;
-    for pI = [.1:.1:2]
+    for pI = [.2:.1:2]
         for pR = [.1:.1:2]
             NIQEs = zeros(im_num,1);
             LOEs = zeros(im_num,1);

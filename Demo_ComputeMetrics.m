@@ -17,7 +17,7 @@ methods = {'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', 'NPE_TIP2013', ...
     'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', 'Dong_ICME2011', ...
     'BIMEF_2019'};
 % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
-for d = 1:length(datasets)
+for d = 4:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
@@ -71,9 +71,9 @@ for d = 1:length(datasets)
             DEs(i) = DE(eIm);
             EMEs(i) = EME(double(eIm));
             PixDs(i) = PixDist(eIm);
-            %fprintf('%s : NIQE = %2.2f, LOE = %2.2f, VLD = %2.2f, VIF = %2.2f, AB = %2.2f, DE = %2.2f\n', ...
-            %    im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i), ABs(i), ...
-            %    DEs(i));
+            fprintf('%s : NIQE = %2.2f, LOE = %2.2f, VLD = %2.2f, VIF = %2.2f, AB = %2.2f, DE = %2.2f\n', ...
+                im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i), ABs(i), ...
+                DEs(i));
             fprintf([Testset ', ' method ', ' name{1} ' is done\n']);
         end
         matname = [write_mat_dir method '.mat'];

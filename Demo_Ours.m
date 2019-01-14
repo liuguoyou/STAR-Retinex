@@ -11,7 +11,7 @@ metrics = {'LOE', 'NIQE', 'VLD', 'VIF', 'ARISMC', 'AB', 'DE', 'EME', 'PixDist'};
 % ARISMC(2) Luminance and chromatic components
 
 method = 'Our';
-for d = 5 %1:length(datasets)
+for d = 1%1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
@@ -32,7 +32,7 @@ for d = 5 %1:length(datasets)
     gamma=2.2;
     alpha = 0.001;
     beta = 0.0001;
-    for pI = [.1:.1:2]
+    for pI = [.6:.1:2]
         for pR = [.1:.1:2]
             NIQEs = zeros(im_num,1);
             LOEs = zeros(im_num,1);
