@@ -35,7 +35,7 @@ for d = 1:length(datasets)
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
     
     %%% begin
-    for m = 1%1:length(methods)
+    for m = 1:length(methods)
         method = methods{m};
         if strcmp(method, 'None') == 1
             Enhance_dir = Test_dir;
@@ -72,8 +72,7 @@ for d = 1:length(datasets)
             EMEs(i) = EME(double(eIm));
             PixDs(i) = PixDist(eIm);
             %fprintf('%s : NIQE = %2.2f, LOE = %2.2f, VLD = %2.2f, VIF = %2.2f, AB = %2.2f, DE = %2.2f\n', ...
-            %    im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i), ABs(i), ...
-            %    DEs(i));
+            %    im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i), ABs(i), DEs(i));
             fprintf([Testset ', ' method ', ' name{1} ' is done\n']);
         end
         matname = [write_mat_dir method '.mat'];
