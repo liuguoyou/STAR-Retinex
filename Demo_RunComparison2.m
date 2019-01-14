@@ -24,7 +24,7 @@ for d = 1:length(datasets)
     % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 11%1:length(methods)
+    for m = 12:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)

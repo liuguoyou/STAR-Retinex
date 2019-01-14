@@ -2,7 +2,7 @@ clc;clear;
 %%% choose test dataset
 datasets = {'LowLight', 'NASA', 'LDR', 'NPE', 'VV'};
 ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
-for d = 3%1:length(datasets)
+for d = 1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
@@ -22,7 +22,7 @@ for d = 3%1:length(datasets)
     %%% begin comparisons
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = length(methods) %1:length(methods)
+    for m = length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
@@ -157,7 +157,8 @@ for d = 3%1:length(datasets)
                 para.omega = 0.01;
                 para.delta = 10;
                 gamma = 2.2;
-                [R, L, N] = Li_TIP2018(Im, para);
+                [R, L, N] = Li_TIP2018(Im, para); % N is the noise map
+                % imshow((N-min(min(N)))./(max(max(N))-min(min(N))))
                 eIm = R.*L.^(1/gamma);
                 % convert Im and eIm to uint8
                 Im = uint8(Im);
