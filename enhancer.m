@@ -70,6 +70,8 @@ for iter = 1:K
         break;
     end
 end
+I(I<0)=0;
+R(R<0)=0;
 end
 
 
