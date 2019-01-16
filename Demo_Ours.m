@@ -5,7 +5,7 @@ datasets = {'LowLight', 'NASA', 'LDR', 'NPE', 'VV'};
 addpath(genpath('metrics'));
 % addpath('/home/csjunxu/Paper/Enhancement/Metrics/vifvec_release');
 metrics = {'LOE', 'NIQE', 'VLD', 'VIF', 'ARISMC', 'AB', 'DE', 'EME', 'PixDist'};
-% LOE: 0~1;
+% LOE: 0~1; lower is better
 % NIQE, VLD, VIF, ARISMC: uint8;
 % ARISMC(1) Luminance component only
 % ARISMC(2) Luminance and chromatic components
