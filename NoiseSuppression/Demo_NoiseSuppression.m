@@ -18,7 +18,7 @@ for d = 1:length(datasets)
     end
     im_num = length(im_dir);
     %%% methods
-    addpath(genpath('../methods'));
+    addpath(genpath('../'));
     methods = {'LIME_TIP2017', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', ...
         'NPE_TIP2013', 'SRIE_TIP2015', 'LDR_TIP2013', 'CVC_TIP2011', ...
         'WAHE_TIP2009', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', ...
@@ -28,7 +28,7 @@ for d = 1:length(datasets)
     %%% begin comparisons
     write_mat_dir = ['/home/csjunxu/Dataset/' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 1:length(methods)
+    for m = 2:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
