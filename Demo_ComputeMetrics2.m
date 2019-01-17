@@ -17,7 +17,7 @@ methods = {'LIME_TIP2017', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', ...
     'WAHE_TIP2009', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', ...
     'Dong_ICME2011', 'BIMEF_2019', 'Li_TIP2018'};
 % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
-for d = 5%1:length(datasets)
+for d = 4%1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
@@ -35,7 +35,7 @@ for d = 5%1:length(datasets)
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
     
     %%% begin
-    for m = [1 2 3 5 7 9 11 13]%1:length(methods)
+    for m = 10:length(methods)
         method = methods{m};
         if strcmp(method, 'None') == 1
             Enhance_dir = Test_dir;
