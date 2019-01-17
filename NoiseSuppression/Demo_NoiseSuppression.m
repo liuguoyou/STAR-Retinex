@@ -28,7 +28,7 @@ for d = 1:length(datasets)
     %%% begin comparisons
     write_mat_dir = ['/home/csjunxu/Dataset/' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 2:length(methods)
+    for m = 1:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
@@ -43,6 +43,7 @@ for d = 1:length(datasets)
             lIm =  im2double( imread(fullfile(Test_dir, im_dir(i).name)) ); % low-light image
             randn('seed',0);
             lnIm = lIm + nSig/255*randn(size(lIm)); % low-light noisy image
+            lnIm(lnIm<0)=0; % avoid negative values, may generate bugs
             PSNR = csnr( lnIm*255, oIm*255, 0, 0 );
             SSIM = cal_ssim( lnIm*255, oIm*255, 0, 0 );
             fprintf('%s: initial value of PSNR = %2.4f, SSIM = %2.4f \n',im_dir(i).name,PSNR,SSIM);
