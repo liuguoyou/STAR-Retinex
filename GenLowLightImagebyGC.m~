@@ -43,7 +43,7 @@ for d = 1:length(dirname)
         Im_LL = hsv2rgb(hsv);
         % convert Im and eIm to uint8
         Im_LL = uint8(Im_LL*255);
-        imwrite(Im, [write_I_dir name{1} '.jpg']);
+        imwrite(Im_LL, [write_I_dir name{1} '.jpg']);
         imwrite(Im_LL, [write_LL_dir name{1} '_LL.jpg']);
         fprintf([dirname{d} ',' num2str(i) '/' num2str(im_num) ',' name{1} ' is done.\n']);
     end
