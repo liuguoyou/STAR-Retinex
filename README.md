@@ -9,7 +9,7 @@ If you use these codes in your research, please cite:
 
 	@inproceedings{junxu,
 	  author={Jun Xu},
-	  title={Ultrasound Image Ehancement},
+	  title={Structure-Texture-Aware Image Enhancement},
 	  booktitle={},
 	  year={2019}
 	}
