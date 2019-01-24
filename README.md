@@ -1,5 +1,5 @@
-# Code for Ultrasound Image Ehancement
-Jun Xu
+# Code for Structure-Texture-Aware Image Enhancement
+Author : Dr. Jun Xu
 
 ### Introduction
 We propose a prior model to estimate both illumination and reflectance from
