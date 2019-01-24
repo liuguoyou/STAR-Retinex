@@ -12,17 +12,17 @@ for d = 1:length(datasets)
     end
     im_num = length(im_dir);
     %%% methods
-    addpath('methods');
-    methods = {'LIME_TIP2017', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', ...
+    addpath(genpath('methods'));
+    methods = {'LIMEBM3D_TIP2017', 'LIME_TIP2017', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', ...
         'NPE_TIP2013', 'SRIE_TIP2015', 'LDR_TIP2013', 'CVC_TIP2011', ...
         'WAHE_TIP2009', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', ...
         'Dong_ICME2011', 'BIMEF_2019', 'Li_TIP2018'};
-    % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
+    % 'Li_TIP2018': would run out of memory or SVD include NaN or Inf
     
     %%% begin comparisons
     write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_' Testset '/'];
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
-    for m = 1%1:length(methods)
+    for m = 1:length(methods)
         method = methods{m};
         write_img_dir = [write_mat_dir method '/'];
         if ~isdir(write_img_dir)
@@ -30,7 +30,40 @@ for d = 1:length(datasets)
         end
         for i = 1:im_num
             name = regexp(im_dir(i).name, '\.', 'split');
-            if strcmp(method, 'LIME_TIP2017') == 1
+            if strcmp(method, 'LIMEBM3D_TIP2017') == 1
+                addpath(genpath('./methods/BM3D/'));
+                Im = imresize(im2double(imread(fullfile(Test_dir, im_dir(i).name))),1);
+                %--------------------------------------------------------------
+                post = true; % Denoising?
+                para.lambda = .15; % Trade-off coefficient
+                % Although this parameter can perform well in a relatively large range,
+                % it should be tuned for different solvers and weighting strategies due to
+                % their difference in value scale.
+                % Typically, lambda for exact solver < for sped-up solver
+                % and using Strategy III < II < I
+                % ---> lambda = 0.15 is fine for SPED-UP SOLVER + STRATEGY III
+                % ......
+                para.sigma = 2; % Sigma for Strategy III
+                para.gamma = 0.7; %  Gamma Transformation on Illumination Map
+                para.solver = 1; % 1: Sped-up Solver; 2: Exact Solver
+                para.strategy = 3;% 1: Strategy I; 2: II; 3: III
+                %---------------------------------------------------------------
+                [eIm, T_ini,T_ref] = LIME_TIP2017(Im,para);
+                %% Post Processing
+                if post
+                    YUV = rgb2ycbcr(eIm);
+                    Y = YUV(:,:,1);
+                    
+                    sigma_BM3D = 10;
+                    [~, Y_d] = BM3D(Y,Y,sigma_BM3D,'lc',0);
+                    
+                    I_d = ycbcr2rgb(cat(3,Y_d,YUV(:,:,2:3)));
+                    I_f = (eIm).*repmat(T_ref,[1,1,3])+I_d.*repmat(1-T_ref,[1,1,3]);
+                end
+                % convert Im and eIm to uint8
+                Im = uint8(Im*255);
+                eIm = uint8(eIm*255);
+            elseif strcmp(method, 'LIME_TIP2017') == 1
                 addpath(genpath('./methods/BM3D/'));
                 Im = imresize(im2double(imread(fullfile(Test_dir, im_dir(i).name))),1);
                 %--------------------------------------------------------------
