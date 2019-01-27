@@ -50,7 +50,6 @@ for d = 1:length(datasets)
                 %---------------------------------------------------------------
                 [eIm, T_ini,T_ref] = LIME_TIP2017(Im,para);
                 %% Post Processing
-                if post
                     YUV = rgb2ycbcr(eIm);
                     Y = YUV(:,:,1);
                     
@@ -58,8 +57,7 @@ for d = 1:length(datasets)
                     [~, Y_d] = BM3D(Y,Y,sigma_BM3D,'lc',0);
                     
                     I_d = ycbcr2rgb(cat(3,Y_d,YUV(:,:,2:3)));
-                    I_f = (eIm).*repmat(T_ref,[1,1,3])+I_d.*repmat(1-T_ref,[1,1,3]);
-                end
+                    eIm = (eIm).*repmat(T_ref,[1,1,3])+I_d.*repmat(1-T_ref,[1,1,3]);
                 % convert Im and eIm to uint8
                 Im = uint8(Im*255);
                 eIm = uint8(eIm*255);
@@ -82,17 +80,6 @@ for d = 1:length(datasets)
                 para.strategy = 3;% 1: Strategy I; 2: II; 3: III
                 %---------------------------------------------------------------
                 [eIm, T_ini,T_ref] = LIME_TIP2017(Im,para);
-                %% Post Processing
-                if post
-                    YUV = rgb2ycbcr(eIm);
-                    Y = YUV(:,:,1);
-                    
-                    sigma_BM3D = 10;
-                    [~, Y_d] = BM3D(Y,Y,sigma_BM3D,'lc',0);
-                    
-                    I_d = ycbcr2rgb(cat(3,Y_d,YUV(:,:,2:3)));
-                    I_f = (eIm).*repmat(T_ref,[1,1,3])+I_d.*repmat(1-T_ref,[1,1,3]);
-                end
                 % convert Im and eIm to uint8
                 Im = uint8(Im*255);
                 eIm = uint8(eIm*255);
