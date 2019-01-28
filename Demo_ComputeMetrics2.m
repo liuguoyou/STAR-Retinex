@@ -1,7 +1,7 @@
 clc;
 clear;
 %%% test dataset
-datasets = {'LowLight', 'NASA', 'LDR', 'NPE', 'VV'};
+datasets = {'LowLight', 'NPE', 'NASA', 'LDR', 'VV'};
 %%% metrics
 addpath(genpath('metrics'));
 % addpath('/home/csjunxu/Paper/Enhancement/Metrics/vifvec_release');
@@ -12,12 +12,12 @@ metrics = {'LOE', 'NIQE', 'VLD', 'VIF', 'AB', 'DE', 'EME', 'PixDist', 'ARISMC'};
 % ARISMC(2) Luminance and chromatic components
 %%% methods
 addpath(genpath('methods'));
-methods = {'LIMEBM3D_TIP2017', 'LIME_TIP2017', 'JieP_ICCV2017', 'WVM_CVPR2016', 'MF_SP2016', ...
-    'NPE_TIP2013', 'SRIE_TIP2015', 'LDR_TIP2013', 'CVC_TIP2011', ...
-    'WAHE_TIP2009', 'BPDHE_TCE2010', 'MSRCR', 'SSR_TIP1997', 'HE', ...
-    'Dong_ICME2011', 'BIMEF_2019', 'Li_TIP2018'};
+methods = {'None', 'LIMEBM3D_TIP2017', 'LIME_TIP2017', 'JieP_ICCV2017', ...
+    'WVM_CVPR2016', 'MF_SP2016', 'NPE_TIP2013', 'SRIE_TIP2015', ...
+    'LDR_TIP2013', 'CVC_TIP2011', 'WAHE_TIP2009', 'MSRCR', 'SSR_TIP1997', ...
+    'HE', 'Dong_ICME2011', 'BIMEF_2019', 'BPDHE_TCE2010', 'Li_TIP2018'};
 % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
-for d = 4%1:length(datasets)
+for d = [1 2]%1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
@@ -35,7 +35,7 @@ for d = 4%1:length(datasets)
     % write_mat_dir = '/home/csjunxu/Paper/Enhancement/Results_NASA/';
     
     %%% begin
-    for m = 11:length(methods)
+    for m = 1%1:length(methods)
         method = methods{m};
         if strcmp(method, 'None') == 1
             Enhance_dir = Test_dir;
@@ -46,6 +46,8 @@ for d = 4%1:length(datasets)
             fprintf('No %s Results on %s!\n', method, Testset);
         end
         NIQEs = zeros(im_num,1);
+        BRISQUEs = zeros(im_num,1);
+        BLIINDS2s = zeros(im_num,1);
         LOEs = zeros(im_num,1);
         VLDs = zeros(im_num,1);
         VIFs = zeros(im_num,1);
@@ -62,7 +64,13 @@ for d = 4%1:length(datasets)
             name = regexp(im_dir(i).name, '\.', 'split');
             Im = imread(fullfile(Test_dir, im_dir(i).name));
             eIm = imread(fullfile(Enhance_dir, eim_dir(i).name));
+            % Metrics
             NIQEs(i) = niqe(eIm);
+            BRISQUEs(i) = brisque(eIm);
+            % DIIVINEs(i) = divine(rgb2gray(eIm));
+            % bliinds2
+            % features = bliinds2_feature_extraction(double(eIm));
+            BLIINDS2s(i) = bliinds_prediction(bliinds2_feature_extraction(double(eIm)));
             LOEs(i) = LOE(im2double(eIm), im2double(Im));
             VLDs(i) = VLD(eIm, Im);
             VIFs(i) = VIF(Im,eIm);
@@ -78,6 +86,8 @@ for d = 4%1:length(datasets)
         end
         matname = [write_mat_dir method '.mat'];
         mNIQEs = mean(NIQEs);
+        mBRISQUEs = mean(BRISQUEs);
+        mBLIINDS2s = mean(BLIINDS2s);
         mLOEs = mean(LOEs);
         mVLDs = mean(VLDs);
         mVIFs = mean(VIFs);
@@ -86,10 +96,12 @@ for d = 4%1:length(datasets)
         mDEs = mean(DEs);
         mEMEs = mean(EMEs);
         mPixDs = mean(PixDs);
-        fprintf('mNIQE = %2.4f, mLOE = %2.4f, mVLD = %2.4f, mVIF = %2.4f\n', ...
-            mNIQEs, mLOEs, mVLDs, mVIFs);
-        save(matname, 'NIQEs', 'mNIQEs', 'LOEs', 'mLOEs', 'VLDs', 'mVLDs', ...
-            'VIFs', 'mVIFs', 'ARISMCs', 'mARISMCs', 'ABs', 'mABs', ...
-            'DEs', 'mDEs', 'EMEs', 'mEMEs', 'PixDs', 'mPixDs');
+        fprintf('mNIQE = %2.4f, mBLIINDS2s = %2.4f, mBRISQUEs = %2.4f, mVIF = %2.4f\n', ...
+            mNIQEs, mBLIINDS2s, mBRISQUEs, mVIFs);
+        save(matname, 'NIQEs', 'mNIQEs', 'BRISQUEs', 'mBRISQUEs', ...
+            'BLIINDS2s', 'mBLIINDS2s', ...
+            'LOEs', 'mLOEs', 'VLDs', 'mVLDs', 'VIFs', 'mVIFs', ...
+            'ARISMCs', 'mARISMCs', 'ABs', 'mABs', 'DEs', 'mDEs', ...
+            'EMEs', 'mEMEs', 'PixDs', 'mPixDs');
     end
 end
