@@ -17,7 +17,7 @@ methods = {'None', 'LIMEBM3D_TIP2017', 'LIME_TIP2017', 'JieP_ICCV2017', ...
     'LDR_TIP2013', 'CVC_TIP2011', 'WAHE_TIP2009', 'MSRCR', 'SSR_TIP1997', ...
     'HE', 'Dong_ICME2011', 'BIMEF_2019', 'BPDHE_TCE2010', 'Li_TIP2018'};
 % 'Li_TIP2018': run out of memory or SVD include NaN or Inf
-for d = [1 2]%1:length(datasets)
+for d = [2]%1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
