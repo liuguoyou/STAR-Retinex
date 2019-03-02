@@ -1,9 +1,15 @@
 function [ I, R] = STAR( src, alpha, beta, pI, pR, vareps, r, K, debug)
-if (~exist('alpha','var'))	% alpha -- parameter for shape
+if (~exist('alpha','var'))	% alpha -- parameter for structure
     alpha = 0.001;
 end
 if (~exist('beta','var'))	% beta -- parameter for texture
     beta = 0.0001;
+end
+if (~exist('pI','var'))	% pI -- parameter for structure INTENSITY
+    pI = 1;
+end
+if (~exist('pR','var'))	% pR -- parameter for texture INTENSITY
+    pR = 0.5;
 end
 if (~exist('vareps','var')) % vareps -- stopping parameter
     vareps = 0.01;

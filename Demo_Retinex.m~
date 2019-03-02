@@ -1,0 +1,52 @@
+% Retinex theory is a color perception model of human vision and is
+% used to remove illumination effects in images. The primary goal
+% of Retinex is to decompose the observed images into illumination
+% and reflectance.
+
+clc;clear;
+%%% choose test dataset
+datasets = {'LowLight', 'NPE', 'VV', 'NASA', 'LDR'};
+Testset = datasets{1}; % select test dataset
+Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
+%%% read images
+ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
+im_dir   =  [];
+for i = 1 : length(ext)
+    im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
+end
+im_num = max(8,length(im_dir));
+
+name = regexp(im_dir(im_num).name, '\.', 'split');
+Im=im2double( imread(fullfile(Test_dir, im_dir(im_num).name)) );
+imwrite(IM, [name{1} '_R_Gray_' method '.png'])
+
+% JIEP ICCV2017
+method = 'JieP';
+[I, R] = jiep(Im);
+hsv = rgb2hsv(Im);
+subplot(2,2,1); imshow(I);  title('Illumination (Gray)');
+imwrite(I, [name{1} '_I_Gray_' method '.png'])
+hsv(:,:,3) = I;
+subplot(2,2,2); imshow(hsv2rgb(hsv));  title('Illumination (RGB)');
+imwrite(hsv2rgb(hsv), [name{1} '_I_RGB_' method '.png'])
+subplot(2,2,3); imshow(I);  title('Reflectance (Gray)');
+imwrite(R, [name{1} '_R_Gray_' method '.png'])
+hsv(:,:,3) = R;
+subplot(2,2,4); imshow(hsv2rgb(hsv));  title('Reflectance (RGB)');
+imwrite(hsv2rgb(hsv), [name{1} '_R_RGB_' method '.png'])
+%subplot(2,2,1); imshow(Im);  title('Input');
+
+% STAR
+method = 'STAR';
+[I, R] = STAR(Im);
+hsv = rgb2hsv(Im);
+subplot(2,2,1); imshow(I);  title('Illumination (Gray)');
+imwrite(I, [name{1} '_I_Gray_' method '.png'])
+hsv(:,:,3) = I;
+subplot(2,2,2); imshow(hsv2rgb(hsv));  title('Illumination (RGB)');
+imwrite(hsv2rgb(hsv), [name{1} '_I_RGB_' method '.png'])
+subplot(2,2,3); imshow(I);  title('Reflectance (Gray)');
+imwrite(R, [name{1} '_R_Gray_' method '.png'])
+hsv(:,:,3) = R;
+subplot(2,2,4); imshow(hsv2rgb(hsv));  title('Reflectance (RGB)');
+imwrite(hsv2rgb(hsv), [name{1} '_R_RGB_' method '.png'])

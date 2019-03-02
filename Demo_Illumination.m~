@@ -26,8 +26,8 @@ for d = 1:2 %length(datasets)
     gamma=2.2;
     alpha = 0.001;
     beta = 0.0001;
-    for pI = [1.5:.1:2]
-        for pR = [0.5:-.1:.1]
+    for pI = [1:.2:1.8]
+        for pR = [.1:.2:1.5]
             NIQEs = zeros(im_num,1);
             VIFs = zeros(im_num,1);
             for i = 1:im_num
@@ -44,17 +44,30 @@ for d = 1:2 %length(datasets)
                 eIm = uint8(eIm*255);
                 % metrics
                 NIQEs(i) = niqe(eIm);
+              
                 VIFs(i) = VIF(Im,eIm);
-                fprintf('%s : NIQE = %2.2f, VIF = %2.2f\n', im_dir(i).name, NIQEs(i), VIFs(i));
+                fprintf('%s : NIQE = %2.2f, LOE = %2.2f, VLD = %2.2f, VIF = %2.2f, AB = %2.2f, DE = %2.2f\n', ...
+                    im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i), ABs(i), ...
+                    DEs(i));
                 % imwrite(eIm, [write_img_dir method '_' name{1} '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
                 %    num2str(alpha) '_beta=' num2str(beta) '_' name{1} '.jpg'])
             end
             matname = [write_mat_dir '/Our_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
                 num2str(alpha) '_beta=' num2str(beta) '.mat'];
             mNIQEs = mean(NIQEs);
+            mLOEs = mean(LOEs);
+            mVLDs = mean(VLDs);
             mVIFs = mean(VIFs);
-            fprintf('mNIQE = %2.4f, mVIF = %2.4f\n', mNIQEs, mVIFs);
-            save(matname, 'NIQEs', 'mNIQEs', 'VIFs', 'mVIFs');
+            mARISMCs = mean(ARISMCs);
+            mABs = mean(ABs);
+            mDEs = mean(DEs);
+            mEMEs = mean(EMEs);
+            mPixDs = mean(PixDs);
+            fprintf('mNIQE = %2.4f, mLOE = %2.4f, mVLD = %2.4f, mVIF = %2.4f\n', ...
+                mNIQEs, mLOEs, mVLDs, mVIFs, mABs);
+            save(matname, 'NIQEs', 'mNIQEs', 'LOEs', 'mLOEs', 'VLDs', 'mVLDs', ...
+                'VIFs', 'mVIFs', 'ARISMCs', 'mARISMCs', 'ABs', 'mABs', ...
+                'DEs', 'mDEs', 'EMEs', 'mEMEs', 'PixDs', 'mPixDs');
         end
     end
 end
