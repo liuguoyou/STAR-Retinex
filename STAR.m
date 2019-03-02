@@ -1,4 +1,4 @@
-function [ I, R] = enhancer( src, alpha, beta, pI, pR, vareps, r, r0, K, debug)
+function [ I, R] = STAR( src, alpha, beta, pI, pR, vareps, r, K, debug)
 if (~exist('alpha','var'))	% alpha -- parameter for shape
     alpha = 0.001;
 end
@@ -49,7 +49,7 @@ for iter = 1:K
     eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');   % iterative error of I
 
     %% algorithm for P2
-    R=S./I;
+    R=S./I; 
     Rx = diff(R,1,2); Rx = padarray(Rx, [0 1], 'post');
     Ry = diff(R,1,1); Ry = padarray(Ry, [1 0], 'post');
     avgRx=convBox( single(Rx), r);
