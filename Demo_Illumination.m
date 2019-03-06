@@ -7,7 +7,7 @@ addpath(genpath('metrics'));
 metrics = {'NIQE', 'VIF'};
 % NIQE and VIF: input image is in uint8;
 
-method = 'Our';
+method = 'STAR';
 for d = 1:2 %length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
@@ -26,8 +26,8 @@ for d = 1:2 %length(datasets)
     gamma=2.2;
     alpha = 0.001;
     beta = 0.0001;
-    for pI = [1.5:.1:2]
-        for pR = [0.5:-.1:.1]
+    for pI = [2]
+        for pR = [1]
             NIQEs = zeros(im_num,1);
             VIFs = zeros(im_num,1);
             for i = 1:im_num
@@ -46,8 +46,8 @@ for d = 1:2 %length(datasets)
                 NIQEs(i) = niqe(eIm);
                 VIFs(i) = VIF(Im,eIm);
                 fprintf('%s : NIQE = %2.2f, VIF = %2.2f\n', im_dir(i).name, NIQEs(i), VIFs(i));
-                % imwrite(eIm, [write_img_dir method '_' name{1} '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
-                %    num2str(alpha) '_beta=' num2str(beta) '_' name{1} '.jpg'])
+                imwrite(eIm, [write_img_dir method '_' name{1} '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
+                  num2str(alpha) '_beta=' num2str(beta) '_' name{1} '.png'])
             end
             matname = [write_mat_dir '/Our_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
                 num2str(alpha) '_beta=' num2str(beta) '.mat'];
