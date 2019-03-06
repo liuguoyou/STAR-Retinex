@@ -8,7 +8,7 @@ metrics = {'NIQE', 'VIF'};
 % NIQE and VIF: input image is in uint8;
 
 method = 'STAR';
-for d = 1:2 %length(datasets)
+for d = 2 %1:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
@@ -46,7 +46,7 @@ for d = 1:2 %length(datasets)
                 NIQEs(i) = niqe(eIm);
                 VIFs(i) = VIF(Im,eIm);
                 fprintf('%s : NIQE = %2.2f, VIF = %2.2f\n', im_dir(i).name, NIQEs(i), VIFs(i));
-                imwrite(eIm, [write_img_dir method '_' name{1} '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
+                imwrite(eIm, [write_img_dir method '_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
                   num2str(alpha) '_beta=' num2str(beta) '_' name{1} '.png'])
             end
             matname = [write_mat_dir '/Our_aIpI=' num2str(pI) '_RpR=' num2str(pR) '_alpha=' ...
