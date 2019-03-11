@@ -8,11 +8,11 @@ metrics = {'NIQE', 'VIF'};
 % NIQE and VIF: input image is in uint8;
 
 method = 'STAR';
-for d = 2 %1:length(datasets)
+for d = 1:length(datasets)
     Testset = datasets{d}; % select test dataset
-    Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
+    Test_dir = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
-    ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
+    ext      =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
     im_dir   =  [];
     for i = 1 : length(ext)
         im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
@@ -22,15 +22,15 @@ for d = 2 %1:length(datasets)
     write_img_dir = [write_mat_dir method '/'];
     if ~isdir(write_img_dir)
         mkdir(write_img_dir);
-    end
+    end 
     gamma=2.2;
-    alpha = 0.001;
-    beta = 0.0001;
-    for pI = [2]
-        for pR = [1]
+    alpha = 0.0005;
+    beta = 0.0005;
+    for pI = [2]  
+        for pR = [0.1]
             NIQEs = zeros(im_num,1);
             VIFs = zeros(im_num,1);
-            for i = 1:im_num
+            for i = 32%1:im_num 
                 name = regexp(im_dir(i).name, '\.', 'split');
                 Im=im2double( imread(fullfile(Test_dir, im_dir(i).name)) );
                 [I, R] = STAR(Im, alpha, beta, pI, pR);

@@ -1,97 +1,92 @@
-clc;clear;
-%%% choose test dataset
-datasets = {'LowLight', 'NPE', 'NASA', 'LDR', 'VV'};
-%%% metrics
-addpath(genpath('metrics'));
-% addpath('/home/csjunxu/Paper/Enhancement/Metrics/vifvec_release');
-metrics = {'LOE', 'NIQE', 'VLD', 'VIF', 'ARISMC', 'AB', 'DE', 'EME', 'PixDist'};
-% LOE: 0~1;
-% NIQE, VLD, VIF, ARISMC: uint8;
-% ARISMC(1) Luminance component only
-% ARISMC(2) Luminance and chromatic components
+% Retinex theory is a color perception model of human vision and is
+% used to remove illumination effects in images. The primary goal
+% of Retinex is to decompose the observed images into illumination
+% and reflectance.
 
-method = 'Our_OutIn';
-for d = 1%1:length(datasets)
-    Testset = datasets{d}; % select test dataset
-    Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
-    %%% read images
-    ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
-    im_dir   =  [];
-    for i = 1 : length(ext)
-        im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
-    end
-    im_num = length(im_dir);
-    % write_mat_dir  = ['/home/csjunxu/Github/data/Ultrasound/'];
-    % write_mat_dir  = ['/home/csjunxu/Github/Segmentation-master/'];
-    write_mat_dir = ['/home/csjunxu/Paper/Enhancement/Results_Test/'];
-    write_img_dir = [write_mat_dir method '/'];
-    if ~isdir(write_img_dir)
-        mkdir(write_img_dir);
-    end
-    
-    gamma=2.2;
-    alpha = 0.001;
-    beta = 0.0001;
-    r = 3;
-    for pI = [2]
-        for pR = [1]
-            NIQEs = zeros(im_num,1);
-            LOEs = zeros(im_num,1);
-            VLDs = zeros(im_num,1);
-            VIFs = zeros(im_num,1);
-            ARISMCs = zeros(im_num,2);
-            ABs = zeros(im_num,1);
-            DEs = zeros(im_num,1);
-            EMEs = zeros(im_num,1);
-            PixDs = zeros(im_num,1);
-            for i = 23%1:im_num
-                name = regexp(im_dir(i).name, '\.', 'split');
-                Im=im2double( imread(fullfile(Test_dir, im_dir(i).name)) );
-                %[I, R] = enhancer_OutIn(Im, alpha, beta, pI, pR, r);
-                [I, R] = enhancer_In(Im, alpha, beta, pI, pR, r);
-                hsv = rgb2hsv(Im);
-                I_gamma = I.^(1/gamma);
-                S_gamma = R .* I_gamma;
-                hsv(:,:,3) = S_gamma;
-                eIm = hsv2rgb(hsv);
-                % convert Im and eIm to uint8
-                Im = uint8(Im*255);
-                eIm = uint8(eIm*255);
-                % metrics
-                %NIQEs(i) = niqe(eIm);
-                %LOEs(i) = LOE(im2double(eIm), im2double(Im));
-                %VLDs(i) = VLD(eIm, Im);
-                %VIFs(i) = VIF(Im,eIm);
-                %ARISMCs(i,:) = ARISMC(eIm);
-                %ABs(i) = AB(eIm);
-                %DEs(i) = DE(eIm);
-                %EMEs(i) = EME(double(eIm));
-                %PixDs(i) = PixDist(eIm);
-                %fprintf('%s : NIQE = %2.2f, LOE = %2.2f, VLD = %2.2f, VIF = %2.2f, AB = %2.2f, DE = %2.2f\n', ...
-                %    im_dir(i).name, NIQEs(i), LOEs(i), VLDs(i), VIFs(i), ABs(i), ...
-                %    DEs(i));
-                imwrite(eIm, [method '_mIpI' num2str(pI) ...
-                    '_mRpR' num2str(pR) '_alpha' num2str(alpha) '_beta' num2str(beta) ...
-                    '_r' num2str(r) '_' name{1} '.jpg']);
-                fprintf([Testset ', ' method ', ' name{1} ' is done\n']);
-            end
-            
-            %matname = [write_mat_dir '/Our_mIpI' num2str(pI) '_mRpR=' num2str(pR) '_alpha' ...
-            %    num2str(alpha) '_beta' num2str(beta) '_r' num2str(r) '.mat'];
-            %mNIQEs = mean(NIQEs);
-            %mLOEs = mean(LOEs);
-            %mVLDs = mean(VLDs);
-            %mVIFs = mean(VIFs);
-            %mARISMCs = mean(ARISMCs);
-            %mABs = mean(ABs);
-            %mDEs = mean(DEs);
-            %mEMEs = mean(EMEs);
-            %mPixDs = mean(PixDs);
-            %fprintf('mNIQE = %2.4f, mLOE = %2.4f, mVLD = %2.4f, mVIF = %2.4f\n', ...
-            %    mNIQEs, mLOEs, mVLDs, mVIFs, mABs);
-            %save(matname, 'NIQEs', 'mNIQEs', 'LOEs', 'mLOEs', 'VLDs', 'mVLDs', ...
-            %    'VIFs', 'mVIFs', 'ARISMCs', 'mARISMCs', 'ABs', 'mABs', ...
-            %    'DEs', 'mDEs', 'EMEs', 'mEMEs', 'PixDs', 'mPixDs');
-        end
+clc;clear;
+%%% methods
+addpath(genpath('methods'));
+%%% choose test dataset
+datasets = {'LowLight', 'NPE', 'VV', 'NASA', 'LDR'};
+Testset = datasets{1}; % select test dataset
+Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
+%%% read images
+ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
+im_dir   =  [];
+for i = 1 : length(ext)
+    im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
+end
+im_num = min(17,length(im_dir));
+
+%%% save results
+name = regexp(im_dir(im_num).name, '\.', 'split');
+Im=im2double( imread(fullfile(Test_dir, im_dir(im_num).name)) );
+write_dir = '/home/csjunxu/Paper/Enhancement/Results_Retinex/OTHERS/';
+if ~isdir(write_dir)
+    mkdir(write_dir);
+end
+imwrite(Im, [write_dir name{1} '.png'])
+
+% WVM CVPR2016
+method = 'WVM';
+Im = 255*Im;
+if size(Im,3)>1
+    HSV = rgb2hsv(Im);   % RGB space to HSV  space
+    S = HSV(:,:,3);       % V layer
+else
+    S = Im;              % gray image
+end
+c_1 = 0.01; c_2 = 0.1; lambda = 1;     % set parameters
+epsilon_stop = 1e-3;  % stopping criteria
+[ R, I, epsilon_R, epsilon_L ] = WVM_CVPR2016( S, c_1, c_2, lambda, epsilon_stop );
+Im = Im/255;
+I = I/255;
+hsv = rgb2hsv(Im);
+subplot(2,2,1); imshow(I);  title('Illumination (Gray)');
+imwrite(I, [write_dir name{1} '_I_Gray_' method '.png'])
+hsv(:,:,3) = I;
+subplot(2,2,2); imshow(hsv2rgb(hsv));  title('Illumination (RGB)');
+imwrite(hsv2rgb(hsv), [write_dir name{1} '_I_RGB_' method '.png'])
+subplot(2,2,3); imshow(I);  title('Reflectance (Gray)');
+imwrite(R, [write_dir name{1} '_R_Gray_' method '.png'])
+hsv(:,:,3) = R;
+subplot(2,2,4); imshow(hsv2rgb(hsv));  title('Reflectance (RGB)');
+imwrite(hsv2rgb(hsv), [write_dir name{1} '_R_RGB_' method '.png'])
+%subplot(2,2,1); imshow(Im);  title('Input');
+
+% JIEP ICCV2017
+method = 'JieP';
+[I, R] = jiep(Im);
+hsv = rgb2hsv(Im);
+subplot(2,2,1); imshow(I);  title('Illumination (Gray)');
+imwrite(I, [write_dir name{1} '_I_Gray_' method '.png'])
+hsv(:,:,3) = I;
+subplot(2,2,2); imshow(hsv2rgb(hsv));  title('Illumination (RGB)');
+imwrite(hsv2rgb(hsv), [write_dir name{1} '_I_RGB_' method '.png'])
+subplot(2,2,3); imshow(I);  title('Reflectance (Gray)');
+imwrite(R, [write_dir name{1} '_R_Gray_' method '.png'])
+hsv(:,:,3) = R;
+subplot(2,2,4); imshow(hsv2rgb(hsv));  title('Reflectance (RGB)');
+imwrite(hsv2rgb(hsv), [write_dir name{1} '_R_RGB_' method '.png'])
+%subplot(2,2,1); imshow(Im);  title('Input');
+
+% STAR
+method = 'STAR';
+alpha = 0.001;
+beta = 0.0001;
+for pI = [1.5:.1:2]
+    for pR = [0.5:-.1:.1]
+        [I, R] = STAR(Im, alpha, beta, pI, pR);
+        hsv = rgb2hsv(Im);
+        subplot(2,2,1); imshow(I);  title('Illumination (Gray)');
+        imwrite(I, [write_dir name{1} '_I_Gray_' method '_pI' num2str(pI) '_pR' num2str(pR) '.png'])
+        hsv(:,:,3) = I;
+        subplot(2,2,2); imshow(hsv2rgb(hsv));  title('Illumination (RGB)');
+        imwrite(hsv2rgb(hsv), [write_dir name{1} '_I_RGB_' method '_pI' num2str(pI) '_pR' num2str(pR) '.png'])
+        subplot(2,2,3); imshow(I);  title('Reflectance (Gray)');
+        imwrite(R, [write_dir name{1} '_R_Gray_' method '_pI' num2str(pI) '_pR' num2str(pR) '.png'])
+        hsv(:,:,3) = R;
+        subplot(2,2,4); imshow(hsv2rgb(hsv));  title('Reflectance (RGB)');
+        imwrite(hsv2rgb(hsv), [write_dir name{1} '_R_RGB_' method '_pI' num2str(pI) '_pR' num2str(pR) '.png'])
     end
 end

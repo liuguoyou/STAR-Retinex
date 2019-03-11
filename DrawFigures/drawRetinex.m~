@@ -1,4 +1,4 @@
-im = '8gray';
+im = 'LVDx1.5\';
 s  = 35;
 f  = 3; 
 lr = 1;
@@ -7,7 +7,7 @@ scale = 1/2;
 image = imread([ im '.png']);
 [hh, ww, cc] = size(image);
 ll = min(hh,ww);
-ii = 101; 
+ii = 101;
 image = imresize(image(1:ll,ii:ll+ii-1,:), scale);
 %[ outputimage ] = boxandresize( image, h,w,s, f,lr);
 imname = sprintf('%s_%s.png','rs',im);
