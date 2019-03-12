@@ -32,8 +32,8 @@ else
     S = hsv(:,:,3);
 end
 
-I=S;                                                    % initialize I_0
-R=ones(size(S));                                        % initialize R_0
+I=S;             % initialize I_0
+R=ones(size(S)); % initialize R_0
 if debug == true
     fprintf('-- Stop iteration until eplison < %02f or K > %d\n', vareps, K);
 end
