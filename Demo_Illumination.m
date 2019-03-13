@@ -8,7 +8,7 @@ metrics = {'NIQE', 'VIF'};
 % NIQE and VIF: input image is in uint8;
 
 method = 'STAR';
-for d = 1:length(datasets)
+for d = 1%:length(datasets)
     Testset = datasets{d}; % select test dataset
     Test_dir = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
     %%% read images
@@ -24,13 +24,13 @@ for d = 1:length(datasets)
         mkdir(write_img_dir);
     end 
     gamma=2.2;
-    alpha = 0.0005;
-    beta = 0.0005;
-    for pI = [1.5]  
-        for pR = [0.5]
+    alpha = 0.001;
+    beta = 0.0001;
+    for pI = [1.6:0.1:1.9]  
+        for pR = [0.5 1]
             NIQEs = zeros(im_num,1);
             VIFs = zeros(im_num,1);
-            for i = 11%1:im_num 
+            for i = 23%1:im_num 
                 name = regexp(im_dir(i).name, '\.', 'split');
                 Im=im2double( imread(fullfile(Test_dir, im_dir(i).name)) );
                 [I, R] = STAR(Im, alpha, beta, pI, pR);
@@ -54,7 +54,7 @@ for d = 1:length(datasets)
             mNIQEs = mean(NIQEs);
             mVIFs = mean(VIFs);
             fprintf('mNIQE = %2.4f, mVIF = %2.4f\n', mNIQEs, mVIFs);
-            save(matname, 'NIQEs', 'mNIQEs', 'VIFs', 'mVIFs');
+            %save(matname, 'NIQEs', 'mNIQEs', 'VIFs', 'mVIFs');
         end
     end
 end

@@ -18,7 +18,7 @@ if (~exist('r','var'))      % r -- the size of Omega in Eq.(3)
     r = 3;
 end
 if (~exist('K','var'))      % K -- maximum iterations
-    K = 4;
+    K = 20;
 end
 if (~exist('debug','var'))  % debug -- set debug/release
     debug = true;
