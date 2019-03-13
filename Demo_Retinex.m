@@ -19,20 +19,21 @@ end
 im_num = length(im_dir);
  
 %%% save results
-name = regexp(im_dir(26).name, '\.', 'split');
-Im=im2double( imread(fullfile(Test_dir, im_dir(26).name)) );
-write_dir = '/home/csjunxu/Paper/Enhancement/Results_Retinex/OTHERS/';
+N=22;
+name = regexp(im_dir(N).name, '\.', 'split');
+Im=im2double( imread(fullfile(Test_dir, im_dir(N).name)) );
+write_dir = './';
 if ~isdir(write_dir)
     mkdir(write_dir);
 end
 imwrite(Im, [write_dir name{1} '.png'])
 
-% STAR
+% STAR   
 method = 'STAR';
 alpha = 0.001;
-beta = 0.0001;
-for pI = [2]
-    for pR = [0.5]
+beta = 0.0001;  
+for pI = [1.5] 
+    for pR = [0.5]  
         [I, R] = STAR(Im, alpha, beta, pI, pR);
         hsv = rgb2hsv(Im);
         subplot(2,2,1); imshow(I);  title('Illumination (Gray)');
@@ -46,7 +47,7 @@ for pI = [2]
         subplot(2,2,4); imshow(hsv2rgb(hsv));  title('Reflectance (RGB)');
         imwrite(hsv2rgb(hsv), [write_dir name{1} '_R_RGB_' method '_pI' num2str(pI) '_pR' num2str(pR) '.png'])
     end
-end
+end     
 
 % JIEP ICCV2017
 method = 'JieP';

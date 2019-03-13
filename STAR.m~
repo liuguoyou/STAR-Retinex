@@ -18,7 +18,7 @@ if (~exist('r','var'))      % r -- the size of Omega in Eq.(3)
     r = 3;
 end
 if (~exist('K','var'))      % K -- maximum iterations
-    K = 4;
+    K = 20;
 end
 if (~exist('debug','var'))  % debug -- set debug/release
     debug = true;
@@ -32,8 +32,8 @@ else
     S = hsv(:,:,3);
 end
 
-I=S;             % initialize I_0
-R=ones(size(S)); % initialize R_0
+I=S.^0.5;             % initialize I_0
+R=I; % initialize R_0
 if debug == true
     fprintf('-- Stop iteration until eplison < %02f or K > %d\n', vareps, K);
 end
@@ -42,7 +42,6 @@ for iter = 1:K
     preR=R;
     
     %% algorithm for P1
-    %pI=max(pI,pR);
     I=S./R;
     Ix = diff(I,1,2); Ix = padarray(Ix, [0 1], 'post');
     Iy = diff(I,1,1); Iy = padarray(Iy, [1 0], 'post');
@@ -57,14 +56,13 @@ for iter = 1:K
     eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');   % iterative error of I
     
     %% algorithm for P2
-    %pR=min(pI,pR);
     R=S./I;
     Rx = diff(R,1,2); Rx = padarray(Rx, [0 1], 'post');
     Ry = diff(R,1,1); Ry = padarray(Ry, [1 0], 'post');
     avgRx=convBox( single(Rx), r);
     avgRy=convBox( single(Ry), r);
     vx = max(abs(avgRx).^pR,eps).^(-1);  % texture map
-    vy = max(abs(avgRy).^pR,eps).^(-1);  % texture map
+    vy = max(abs(Ry).^pR,eps).^(-1);  % texture map
     vx(:,end) = 0;
     vy(end,:) = 0;
     

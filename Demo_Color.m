@@ -1,13 +1,28 @@
 clc;
 clear;
 close all;
-
-I = im2double(imread('correction/img/books.png'));
-for scale=1.4
+%%% choose test dataset
+datasets = {'LowLight', 'NPE', 'VV', 'NASA', 'LDR'};
+Testset = datasets{1}; % select test dataset
+Test_dir  = fullfile('/home/csjunxu/Paper/Enhancement/Dataset', ['Images_' Testset]);
+%%% read images
+ext         =  {'*.jpg','*.jpeg','*.JPG','*.png','*.bmp'};
+im_dir   =  [];
+for i = 1 : length(ext)
+    im_dir = cat(1,im_dir, dir(fullfile(Test_dir,ext{i})));
+end
+im_num = length(im_dir);
+ 
+%%% save results
+N=11;
+name = regexp(im_dir(N).name, '\.', 'split');
+I=im2double( imread(fullfile(Test_dir, im_dir(N).name)) );
+%I=im2double(imread('correction/img/books.png'));
+for scale=1.2
     for alpha=0.001
         for beta=0.0001
             for pI=2
-                for pR=1.2:0.1:1.5
+                for pR=1
                     for ch=1:size(I,3)
                         [L(:,:,ch),R(:,:,ch)]=STAR(I(:,:,ch),alpha,beta,pI,pR);
                     end
