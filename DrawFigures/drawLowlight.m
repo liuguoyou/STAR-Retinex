@@ -1,6 +1,6 @@
-im = '10';
+im = '3';
 h  = 80;
-w  = 120;
+w  = 90;
 s  = 40;
 f  = 3;
 lr = 1;
@@ -47,7 +47,7 @@ imname = sprintf('%s_%s_LIME.png','rs',im);
 imwrite(outputimage,imname,'png');
 
 %% STAR
-image = imread(['/home/csjunxu/Paper/Enhancement/Results_' dataset '/STAR/STAR_aIpI=2_RpR=1_alpha=0.001_beta=0.0001_' im '.png']);
+image = imread(['STAR_' im '.png']);
 image = imresize(image(1:ll,ii:ll+ii-1,:), scale);
 [ outputimage ] = boxandresize( image, h,w,s, f,lr);
 imname = sprintf('%s_%s_STAR.png','rs',im);

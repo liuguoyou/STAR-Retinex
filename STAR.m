@@ -6,7 +6,7 @@ if (~exist('beta','var'))	% beta -- parameter for texture
     beta = 0.0001;
 end
 if (~exist('pI','var'))	% pI -- parameter for structure INTENSITY
-    pI = 1;
+    pI = 1.5;
 end
 if (~exist('pR','var'))	% pR -- parameter for texture INTENSITY
     pR = 0.5;
@@ -32,8 +32,8 @@ else
     S = hsv(:,:,3);
 end
 
-I=S;                                                    % initialize I_0
-R=ones(size(S));                                        % initialize R_0
+I=S;             % initialize I_0
+R=ones(size(S)); % initialize R_0
 if debug == true
     fprintf('-- Stop iteration until eplison < %02f or K > %d\n', vareps, K);
 end
@@ -42,6 +42,7 @@ for iter = 1:K
     preR=R;
     
     %% algorithm for P1
+    %pI=max(pI,pR);
     I=S./R;
     Ix = diff(I,1,2); Ix = padarray(Ix, [0 1], 'post');
     Iy = diff(I,1,1); Iy = padarray(Iy, [1 0], 'post');
@@ -56,6 +57,7 @@ for iter = 1:K
     eplisonI = norm(I-preI, 'fro')/norm(preI, 'fro');   % iterative error of I
     
     %% algorithm for P2
+    %pR=min(pI,pR);
     R=S./I;
     Rx = diff(R,1,2); Rx = padarray(Rx, [0 1], 'post');
     Ry = diff(R,1,1); Ry = padarray(Ry, [1 0], 'post');

@@ -1,7 +1,8 @@
 close all;
-method='jiep';
+method='star';%'jiep';
 Hats=im2double(imread('../img/books_gt.png'));
-Hatsc=im2double(imread(['../img/books_' method '.png']));
+%Hatsc=im2double(imread(['/home/csjunxu/Paper/Enhancement/Results_Color/books_star_1.4_0.001_0.0001_1.9_1.5.png']));
+Hatsc=im2double(imread(['../img/books_jiep.png']));
 rHats=Hats(:,:,1);
 gHats=Hats(:,:,2);
 bHats=Hats(:,:,3);
@@ -20,7 +21,7 @@ whitepoint = rgbWhite * rgb2lms';
 
 % 3.1  -- Convert the RGB data to LMS (or XYZ if you like).
 %
-img = [ rHats gHats bHats];
+img = [rHats gHats bHats];
 imgRGB = dac2rgb(img,gammaTable);
 img1LMS = changeColorSpace(imgRGB,rgb2lms);
 img = [ rHatsc gHatsc bHatsc];
@@ -37,7 +38,7 @@ errorImage = scielab(sampPerDeg, img1LMS, img2LMS, whitepoint, imageformat);
 % max(img1LMS(:)), min(img1LMS(:))
 % max(img2LMS(:)), min(img2LMS(:))
 figure;
-hist(errorImage(:),[1:2:14])
+hist(errorImage(:),[1:2:40])
 sum(errorImage(:) > 20)   % We think this is 173
 
 % Look at the spatial distribution of the errors.
@@ -59,4 +60,5 @@ ht=figure;
 colormap(mp)
 image(comparison);
 axis off
-saveas_center(ht, ['../img/books_error_' method '.png'], size(Hats,2), size(Hats,1));
+%saveas_center(ht, ['../../books_error_' method '_' num2str(scale) '_' num2str(alpha) '_' num2str(beta) '_' num2str(pI) '_' num2str(pR) '.png'], size(Hats,2), size(Hats,1));
+%saveas_center(ht, ['../img/books_error_' method '.png'], size(Hats,2), size(Hats,1));
