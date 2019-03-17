@@ -6,7 +6,7 @@ if (~exist('beta','var'))	% beta -- parameter for texture
     beta = 0.0001;
 end
 if (~exist('pI','var'))	% pI -- parameter for structure INTENSITY
-    pI = 1;
+    pI = 1.5;
 end
 if (~exist('pR','var'))	% pR -- parameter for texture INTENSITY
     pR = 0.5;

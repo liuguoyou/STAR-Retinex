@@ -19,7 +19,7 @@ end
 im_num = length(im_dir);
  
 %%% save results
-N=22;
+N=32;
 name = regexp(im_dir(N).name, '\.', 'split');
 Im=im2double( imread(fullfile(Test_dir, im_dir(N).name)) );
 write_dir = './';
@@ -33,7 +33,7 @@ method = 'STAR';
 alpha = 0.001;
 beta = 0.0001;  
 for pI = [1.5] 
-    for pR = [0.5]  
+    for pR = [1]  
         [I, R] = STAR(Im, alpha, beta, pI, pR);
         hsv = rgb2hsv(Im);
         subplot(2,2,1); imshow(I);  title('Illumination (Gray)');
