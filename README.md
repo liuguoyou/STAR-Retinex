@@ -1,15 +1,11 @@
-# Code for Structure-Texture-Aware Image Enhancement
+# Code for "SATR: A Structure and Texture-Aware Retinex Model"
 Author : Dr. Jun Xu
-
-### Introduction
-We propose a prior model to estimate both illumination and reflectance from
-an observed image. 
 
 If you use these codes in your research, please cite:
 
 	@inproceedings{junxu,
 	  author={Jun Xu},
-	  title={Structure-Texture-Aware Image Enhancement},
-	  booktitle={},
+	  title={SATR: A Structure and Texture-Aware Retinex Model},
+	  booktitle={https://arxiv.org/abs/1906.06690},
 	  year={2019}
 	}
